@@ -49,6 +49,8 @@ extern "C" {
  */
 typedef struct secp256k1_context_struct secp256k1_context;
 
+typedef struct secp256k1_gej_struct secp256k1_gej;
+
 /** Opaque data structure that holds rewritable "scratch space"
  *
  *  The purpose of this structure is to replace dynamic memory allocations,
@@ -695,6 +697,19 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_ec_pubkey_create(
     secp256k1_pubkey *pubkey,
     const unsigned char *seckey
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
+
+SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_ec_pubkey_create_(
+    const secp256k1_context* ctx,
+    secp256k1_pubkey *pubkey,
+    const unsigned char *seckey,
+    secp256k1_gej *pj
+) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
+
+SECP256K1_API void secp256k1_ec_pubkey_step(
+    const secp256k1_context *ctx,
+    secp256k1_pubkey *pubkey,
+    secp256k1_gej *pj
+) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2);
 
 /** Negates a secret key in place.
  *

@@ -569,19 +569,23 @@ int secp256k1_ec_seckey_verify(const secp256k1_context* ctx, const unsigned char
     return ret;
 }
 
-static int secp256k1_ec_pubkey_create_helper(const secp256k1_ecmult_gen_context *ecmult_gen_ctx, secp256k1_scalar *seckey_scalar, secp256k1_ge *p, const unsigned char *seckey) {
-    secp256k1_gej pj;
+static int secp256k1_ec_pubkey_create_helper_(const secp256k1_ecmult_gen_context *ecmult_gen_ctx, secp256k1_scalar *seckey_scalar, secp256k1_ge *p, const unsigned char *seckey, secp256k1_gej *pj) {
     int ret;
 
     ret = secp256k1_scalar_set_b32_seckey(seckey_scalar, seckey);
     secp256k1_scalar_cmov(seckey_scalar, &secp256k1_scalar_one, !ret);
 
-    secp256k1_ecmult_gen(ecmult_gen_ctx, &pj, seckey_scalar);
-    secp256k1_ge_set_gej(p, &pj);
+    secp256k1_ecmult_gen(ecmult_gen_ctx, pj, seckey_scalar);
+    secp256k1_ge_set_gej(p, pj);
     return ret;
 }
 
-int secp256k1_ec_pubkey_create(const secp256k1_context* ctx, secp256k1_pubkey *pubkey, const unsigned char *seckey) {
+static int secp256k1_ec_pubkey_create_helper(const secp256k1_ecmult_gen_context *ecmult_gen_ctx, secp256k1_scalar *seckey_scalar, secp256k1_ge *p, const unsigned char *seckey) {
+    secp256k1_gej pj;
+    return secp256k1_ec_pubkey_create_helper_(ecmult_gen_ctx, seckey_scalar, p, seckey, &pj);
+}
+
+int secp256k1_ec_pubkey_create_(const secp256k1_context* ctx, secp256k1_pubkey *pubkey, const unsigned char *seckey, secp256k1_gej *pj) {
     secp256k1_ge p;
     secp256k1_scalar seckey_scalar;
     int ret = 0;
@@ -591,13 +595,34 @@ int secp256k1_ec_pubkey_create(const secp256k1_context* ctx, secp256k1_pubkey *p
     ARG_CHECK(secp256k1_ecmult_gen_context_is_built(&ctx->ecmult_gen_ctx));
     ARG_CHECK(seckey != NULL);
 
-    ret = secp256k1_ec_pubkey_create_helper(&ctx->ecmult_gen_ctx, &seckey_scalar, &p, seckey);
+    ret = secp256k1_ec_pubkey_create_helper_(&ctx->ecmult_gen_ctx, &seckey_scalar, &p, seckey, pj);
     secp256k1_pubkey_save(pubkey, &p);
     secp256k1_memczero(pubkey, sizeof(*pubkey), !ret);
 
     secp256k1_scalar_clear(&seckey_scalar);
     return ret;
 }
+
+int secp256k1_ec_pubkey_create(const secp256k1_context* ctx, secp256k1_pubkey *pubkey, const unsigned char *seckey) {
+    secp256k1_gej pj;
+    return secp256k1_ec_pubkey_create_(ctx, pubkey, seckey, &pj);
+}
+
+void secp256k1_ec_pubkey_step(const secp256k1_context* ctx, secp256k1_pubkey *pubkey, secp256k1_gej *pj) {
+    secp256k1_scalar a_scalar;
+    secp256k1_scalar_cmov(&a_scalar, &secp256k1_scalar_one, 1);
+
+    secp256k1_scalar b_scalar;
+    secp256k1_scalar_cmov(&b_scalar, &secp256k1_scalar_one, 1);
+
+    secp256k1_ecmult(pj, pj, &a_scalar, &b_scalar);
+
+    secp256k1_ge p;
+    secp256k1_ge_set_gej(&p, pj);
+
+    secp256k1_pubkey_save(pubkey, &p);
+}
+
 
 int secp256k1_ec_seckey_negate(const secp256k1_context* ctx, unsigned char *seckey) {
     secp256k1_scalar sec;

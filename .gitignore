@@ -63,3 +63,5 @@ libsecp256k1.pc
 /CMakeUserPresets.json
 # Default CMake build directory.
 /build
+
+.ccls-cache
