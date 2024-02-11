@@ -154,7 +154,7 @@ static void secp256k1_ge_neg(secp256k1_ge *r, const secp256k1_ge *a) {
     SECP256K1_GE_VERIFY(r);
 }
 
-static void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a) {
+void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a) {
     secp256k1_fe z2, z3;
     SECP256K1_GEJ_VERIFY(a);
 

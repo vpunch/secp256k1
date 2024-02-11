@@ -13,11 +13,11 @@
  *  or occasionally on an isomorphic curve of the form y^2 = x^3 + 7*t^6.
  *  Note: For exhaustive test mode, secp256k1 is replaced by a small subgroup of a different curve.
  */
-typedef struct {
+struct secp256k1_ge_struct {
     secp256k1_fe x;
     secp256k1_fe y;
     int infinity; /* whether this represents the point at infinity */
-} secp256k1_ge;
+};
 
 #define SECP256K1_GE_CONST(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {SECP256K1_FE_CONST((a),(b),(c),(d),(e),(f),(g),(h)), SECP256K1_FE_CONST((i),(j),(k),(l),(m),(n),(o),(p)), 0}
 #define SECP256K1_GE_CONST_INFINITY {SECP256K1_FE_CONST(0, 0, 0, 0, 0, 0, 0, 0), SECP256K1_FE_CONST(0, 0, 0, 0, 0, 0, 0, 0), 1}
@@ -75,7 +75,7 @@ static int secp256k1_ge_is_valid_var(const secp256k1_ge *a);
 static void secp256k1_ge_neg(secp256k1_ge *r, const secp256k1_ge *a);
 
 /** Set a group element equal to another which is given in jacobian coordinates. Constant time. */
-static void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a);
+/*static void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a);*/
 
 /** Set a group element equal to another which is given in jacobian coordinates. */
 static void secp256k1_ge_set_gej_var(secp256k1_ge *r, secp256k1_gej *a);

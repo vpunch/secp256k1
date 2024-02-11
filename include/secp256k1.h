@@ -50,6 +50,7 @@ extern "C" {
 typedef struct secp256k1_context_struct secp256k1_context;
 
 typedef struct secp256k1_gej_struct secp256k1_gej;
+typedef struct secp256k1_ge_struct secp256k1_ge;
 
 /** Opaque data structure that holds rewritable "scratch space"
  *
@@ -705,11 +706,10 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_ec_pubkey_create_(
     secp256k1_gej *pj
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
 
-SECP256K1_API void secp256k1_ec_pubkey_step(
+SECP256K1_API void secp256k1_point_step(
     const secp256k1_context *ctx,
-    secp256k1_pubkey *pubkey,
     secp256k1_gej *pj
-) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2);
+) SECP256K1_ARG_NONNULL(1);
 
 /** Negates a secret key in place.
  *
@@ -916,6 +916,10 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_tagged_sha256(
     const unsigned char *msg,
     size_t msglen
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3) SECP256K1_ARG_NONNULL(5);
+
+SECP256K1_API void secp256k1_pubkey_save(secp256k1_pubkey* pubkey, secp256k1_ge* ge);
+SECP256K1_API void secp256k1_y_get_b32(unsigned char *r, secp256k1_ge *a);
+SECP256K1_API void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a);
 
 #ifdef __cplusplus
 }
