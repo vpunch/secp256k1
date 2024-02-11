@@ -624,7 +624,6 @@ void secp256k1_point_step(const secp256k1_context* ctx, secp256k1_gej *pj) {
     secp256k1_ecmult(pj, pj, &a_scalar, &b_scalar);
 }
 
-
 int secp256k1_ec_seckey_negate(const secp256k1_context* ctx, unsigned char *seckey) {
     secp256k1_scalar sec;
     int ret = 0;
