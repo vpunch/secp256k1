@@ -699,17 +699,15 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_ec_pubkey_create(
     const unsigned char *seckey
 ) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
 
-SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_ec_pubkey_create_(
+SECP256K1_API int secp256k1_ec_pubkey_create_(
     const secp256k1_context* ctx,
     secp256k1_pubkey *pubkey,
     const unsigned char *seckey,
+    secp256k1_ge *p,
     secp256k1_gej *pj
-) SECP256K1_ARG_NONNULL(1) SECP256K1_ARG_NONNULL(2) SECP256K1_ARG_NONNULL(3);
+);
 
-SECP256K1_API void secp256k1_point_step(
-    const secp256k1_context *ctx,
-    secp256k1_gej *pj
-) SECP256K1_ARG_NONNULL(1);
+SECP256K1_API void secp256k1_point_step(secp256k1_gej *rj, secp256k1_gej *pj);
 
 /** Negates a secret key in place.
  *
@@ -919,7 +917,7 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_tagged_sha256(
 
 SECP256K1_API void secp256k1_pubkey_save(secp256k1_pubkey* pubkey, secp256k1_ge* ge);
 SECP256K1_API void secp256k1_y_get_b32(unsigned char *r, secp256k1_ge *a);
-SECP256K1_API void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a);
+SECP256K1_API void secp256k1_ge_set_all_gej_var(secp256k1_ge *r, const secp256k1_gej *a, size_t len);
 
 #ifdef __cplusplus
 }
