@@ -918,6 +918,7 @@ SECP256K1_API SECP256K1_WARN_UNUSED_RESULT int secp256k1_tagged_sha256(
 SECP256K1_API void secp256k1_pubkey_save(secp256k1_pubkey* pubkey, secp256k1_ge* ge);
 SECP256K1_API void secp256k1_y_get_b32(unsigned char *r, secp256k1_ge *a);
 SECP256K1_API void secp256k1_ge_set_all_gej_var(secp256k1_ge *r, const secp256k1_gej *a, size_t len);
+SECP256K1_API void secp256k1_seckey_add_int(unsigned char *result, const unsigned char *seckey, unsigned int i);
 
 #ifdef __cplusplus
 }

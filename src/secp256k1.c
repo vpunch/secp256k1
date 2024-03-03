@@ -614,6 +614,19 @@ int secp256k1_ec_pubkey_create(const secp256k1_context* ctx, secp256k1_pubkey *p
     return secp256k1_ec_pubkey_create_(ctx, pubkey, seckey, &p, &pj);
 }
 
+void secp256k1_seckey_add_int(unsigned char *result, const unsigned char *seckey, unsigned int i) {
+    secp256k1_scalar seckey_scalar;
+    secp256k1_scalar_set_b32_seckey(&seckey_scalar, seckey);
+
+    secp256k1_scalar i_scalar;
+    secp256k1_scalar_set_int(&i_scalar, i);
+
+    secp256k1_scalar result_scalar;
+    secp256k1_scalar_add(&result_scalar, &i_scalar, &seckey_scalar);
+
+    secp256k1_scalar_get_b32(result, &result_scalar);
+}
+
 void secp256k1_point_step(secp256k1_gej *rj, secp256k1_gej *pj) {
     secp256k1_gej_add_ge_var(rj, pj, &secp256k1_ge_const_g, NULL);
 }
